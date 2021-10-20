@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public class MemberService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     // 회원 가입
     public Long join(Member member) {
@@ -20,9 +24,9 @@ public class MemberService {
     }
 
     private void validateDuplicateName(Member member) {
-        Optional<Member> result = memberRepository.findByName(member.getName())
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 이름입니다. 다른 이름을 입력해주세요.")
+        memberRepository.findByName(member.getName())
+                .ifPresent(m ->  {
+                    throw new IllegalStateException("이미 존재하는 이름입니다. 다른 이름을 입력해주세요.");
                 });
     }
 
